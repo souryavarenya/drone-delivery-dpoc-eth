@@ -30,7 +30,7 @@ clc;
 mapSize = [15, 20];
 % Set to true to generate a random map of size mapSize, else set to false 
 % to load the pre-exsisting example map
-generateRandomWorld = true;
+generateRandomWorld = false;
 
 % Plotting options
 global PLOT_POLICY PLOT_COST
@@ -93,7 +93,7 @@ global K
 K=size(stateSpace,1);
 
 %% Set the following to true as you progress with the files
-transitionProbabilitiesImplemented = false;
+transitionProbabilitiesImplemented = true;
 stageCostsImplemented = false;
 valueIterationImplemented = false; 
 policyIterationImplemented = false;

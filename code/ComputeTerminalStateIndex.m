@@ -20,5 +20,7 @@ function stateIndex = ComputeTerminalStateIndex(stateSpace, map)
 %           stateSpace matrix
 
 global DROP_OFF
+
+[~,stateIndex]=ismember([1+floor(find(map' == DROP_OFF)/size(map,2)), 1+floor(find(map == DROP_OFF)/size(map,1)), 1],stateSpace,'rows');
                   
 end

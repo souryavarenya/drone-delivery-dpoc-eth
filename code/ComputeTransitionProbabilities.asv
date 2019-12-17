@@ -59,11 +59,7 @@ for i = 1:K
         n_next = n + DY(u);
         
         % Checks if action allowable - if not, skips this action
-        if (m_next)*(n_next)*(m_next - M - 1)*(n_next - N - 1) == 0
-            continue
-        end
-        
-        if map(m_next, n_next) == TREE
+        if map(m_next, n_next) == TREE || (m_next)*(n_next)*(m_next - M - 1)*(n_next - N - 1) == 0
             continue
         end
         
@@ -87,12 +83,7 @@ for i = 1:K
             n_wind = n_next + DY(wind);
             
             % Checks if hits tree/boundary
-            if (m_wind)*(n_wind)*(m_wind - M - 1)*(n_wind - N - 1) == 0
-                p_back2base = p_back2base + (P_WIND/4);
-                continue
-            end
-            
-            if map(m_wind, n_wind) == TREE
+            if map(m_wind, n_wind) == TREE || (m_wind)*(n_wind)*(m_wind - M - 1)*(n_wind - N - 1) == 0
                 p_back2base = p_back2base + (P_WIND/4);
                 continue
             end
