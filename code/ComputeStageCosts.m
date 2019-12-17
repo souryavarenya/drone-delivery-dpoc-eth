@@ -1,4 +1,4 @@
-function G = ComputeStageCosts( stateSpace, map )
+function G = ComputeStageCosts(stateSpace, map )
 %COMPUTESTAGECOSTS Compute stage costs.
 % 	Compute the stage costs for all states in the state space for all
 %   control inputs.
@@ -145,7 +145,7 @@ global TREE P_WIND
                if ~(i(1)>=1 && i(1)<=M && i(2)>=1 && i(2)<=N) || map(i(1),i(2)) == TREE
                    map_of_wind(m,n) = map_of_wind(m,n) + P_WIND/4;
                else
-                   map_of_wind(m,n) = map_of_wind(m,n) + P_WIND/4*shotMap(i(1),i(2));
+                   map_of_wind(m,n) = map_of_wind(m,n) + P_WIND/4*map_of_shot(i(1),i(2));
                end
             end
         end
