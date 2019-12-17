@@ -75,7 +75,7 @@ for i = 1:K
         p_not_shot = prod(ones(length(p_shooters),1) - p_shooters);
         
         % Finds stateSpace index of mn_next & Assign P value to the respective location in P_temp
-        j = ismember([m_next n_next stateSpace(i,3)],stateSpace,'rows');
+        [~,j] = ismember([m_next, n_next, stateSpace(i,3)],stateSpace,'rows');
         P_temp(i,j,u) = (1 - P_WIND)*p_not_shot;
         
         % Initialize base state counter
@@ -105,7 +105,7 @@ for i = 1:K
             p_not_shot = prod(ones(length(p_shooters),1) - p_shooters);
             
             % Finds stateSpace index of mn_wind & Assign P value to the respective location in P_temp
-            j = ismember([m_wind n_wind stateSpace(i,3)],stateSpace,'rows');
+            [~,j] = ismember([m_wind n_wind stateSpace(i,3)],stateSpace,'rows');
             P_temp(i,j,u) = (P_WIND/4)*p_not_shot;
             
             % Add remaining probability of getting shot to back2base

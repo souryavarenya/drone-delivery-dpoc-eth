@@ -1,4 +1,4 @@
-function G = ComputeStageCosts( stateSpace, map )
+function G = ComputeStageCosts( stateSpace, map , P)
 %COMPUTESTAGECOSTS Compute stage costs.
 % 	Compute the stage costs for all states in the state space for all
 %   control inputs.
@@ -30,6 +30,9 @@ function G = ComputeStageCosts( stateSpace, map )
     global NORTH SOUTH EAST WEST HOVER
     global K
     global TERMINAL_STATE_INDEX
+    
+%  Set base map
+
 
 end
 
