@@ -49,8 +49,8 @@ function G = ComputeStageCosts(stateSpace, map )
     for j=1:K
         n = stateSpace(j,2);
         m = stateSpace(j,1);
-        probCrash = map_of_shot(m,n) + map_of_wind(m,n) ;
-        G(j,HOVER) =  (1-probCrash)*1 + probCrash*Nc;
+        probCrash = map_of_wind(m,n) + (1-P_WIND)*map_of_shot(m,n);
+        G(j,HOVER) =  1-probCrash + probCrash*Nc;
     end
     
     %Once I have the calculations for HOVER, I need to consider the other
@@ -98,7 +98,7 @@ function G = ComputeStageCosts(stateSpace, map )
        end
     end
     
-    
+    G(TERMINAL_STATE_INDEX, :) = 0;
 
 end
 
@@ -129,7 +129,7 @@ global SHOOTER R GAMMA TREE
     end
 end
 
-% I compute the prob that the drone will drop due to the wind
+% I compute the prob that the drone will drop after the wind
 function map_of_wind = probWind(map, map_of_shot)
 
 global TREE P_WIND
@@ -141,11 +141,11 @@ global TREE P_WIND
                map_of_wind(m,n) = NaN;
                continue
            end
-            for i = [ [m;n-1], [m;n+1], [m-1;n], [m+1;n] ]
-               if ~(i(1)>=1 && i(1)<=M && i(2)>=1 && i(2)<=N) || map(i(1),i(2)) == TREE
+            for i = [ [0;-1], [0;1], [-1;0], [+1;0] ]
+               if (m+i(1)<1 || m+i(1)>M || n+i(2)<1 || n+i(2)>N) || map(m+i(1),n+i(2)) == TREE
                    map_of_wind(m,n) = map_of_wind(m,n) + P_WIND/4;
                else
-                   map_of_wind(m,n) = map_of_wind(m,n) + P_WIND/4*map_of_shot(i(1),i(2));
+                   map_of_wind(m,n) = map_of_wind(m,n) + P_WIND/4*map_of_shot(m+i(1),n+i(2));
                end
             end
         end
@@ -163,15 +163,10 @@ global TREE
     for m = 1 : size(map, 1)
         for n = 1 : size(map, 2)
             if map(m, n) ~= TREE
-                from_state_to_idx =[ from_state_to_idx;
-                        count+1;
-                        count+2];
-                count= count + 2;
-            
+                from_state_to_idx =[ from_state_to_idx; count+1; count+2];
+                count= count + 2
             else
-                from_state_to_idx =[ from_state_to_idx;
-                        0;
-                        0];
+                from_state_to_idx =[ from_state_to_idx; 0; 0];
             end
         end
     end
