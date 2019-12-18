@@ -94,7 +94,7 @@ K=size(stateSpace,1);
 
 %% Set the following to true as you progress with the files
 transitionProbabilitiesImplemented = true;
-stageCostsImplemented = false;
+stageCostsImplemented = true;
 valueIterationImplemented = false; 
 policyIterationImplemented = false;
 linearProgrammingImplemented = false;
@@ -127,7 +127,7 @@ if stageCostsImplemented
     % represents the cost if we are in state i and apply control input l.
     
     % TODO: Question c)
-    G = ComputeStageCosts(stateSpace, map, P);
+    G = ComputeStageCosts(stateSpace, map);
 end
 
 %% Solve stochastic shortest path problem
