@@ -39,13 +39,17 @@ global TERMINAL_STATE_INDEX
 % IMPORTANT: You can use the global variable TERMINAL_STATE_INDEX computed
 % in the ComputeTerminalStateIndex.m file (see main.m)
 
+P(TERMINAL_STATE_INDEX,:,:) = 0;
+P(:,TERMINAL_STATE_INDEX,:) = 0;
+G(TERMINAL_STATE_INDEX,:) = 0;
+
 L = size(G,2); % number of control inputs
 P_ = zeros(K*L,K);
 G_ = zeros(K*L,1);
     
 for i = 1:L
     P_((K*(i-1)+1):K*i,:) = P(:,:,i);
-    P_((K*(i-1)+1):K*i,:) = eye(K,K) - 0.999*P_((K*(i-1)+1):K*i,:);
+    P_((K*(i-1)+1):K*i,:) = eye(K,K) - P_((K*(i-1)+1):K*i,:);
     G_((K*(i-1)+1):K*i,1) = G(:,i);
 end
 
