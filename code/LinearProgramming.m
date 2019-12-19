@@ -42,10 +42,10 @@ global TERMINAL_STATE_INDEX
 L = size(G,2); % number of control inputs
 P_ = zeros(K*L,K);
 G_ = zeros(K*L,1);
-
+    
 for i = 1:L
     P_((K*(i-1)+1):K*i,:) = P(:,:,i);
-    P_((K*(i-1)+1):K*i,:) = eye(K,K) - 0.999*P_((K*(i-1)+1):K*i,:);
+    P_((K*(i-1)+1):K*i,:) = eye(K,K) - P_((K*(i-1)+1):K*i,:);
     G_((K*(i-1)+1):K*i,1) = G(:,i);
 end
 
@@ -57,10 +57,15 @@ J = linprog(f,P_,G_);
 
 % find optimal inputs
 u_opt = zeros(K,1);
+P(TERMINAL_STATE_INDEX,:,:) = 1;
+P(:,TERMINAL_STATE_INDEX,:) = 1;
+G(TERMINAL_STATE_INDEX,:) = 0;
 for i = 1:K
+    argmin = 100;
     for u = 1:L
-        if J(i) - G(i,u) -P(i,:,u)*J < 1e-5
+        if argmin > G(i,u) + P(i,:,u)*J 
             u_opt(i) = u;
+            argmin = G(i,u) + P(i,:,u)*J;
         end
     end
 end
