@@ -30,7 +30,7 @@ clc;
 mapSize = [15, 20];
 % Set to true to generate a random map of size mapSize, else set to false 
 % to load the pre-exsisting example map
-generateRandomWorld = false;
+generateRandomWorld = true;
 
 % Plotting options
 global PLOT_POLICY PLOT_COST
@@ -70,7 +70,7 @@ if generateRandomWorld
 	[map] = GenerateWorld(mapSize(1), mapSize(2));
 else
     % We can load a pre-generated map.
-    load('World1.mat');
+    load('exampleWorld.mat');
 end
 MakePlots(map);
 
@@ -127,8 +127,7 @@ if stageCostsImplemented
     % represents the cost if we are in state i and apply control input l.
     
     % TODO: Question c)
-    %G = ComputeStageCosts(stateSpace, map);
-    G = ComputeStageCost(stateSpace, map);
+    G = ComputeStageCosts(stateSpace, map);
 end
 
 %% Solve stochastic shortest path problem

@@ -39,21 +39,25 @@ global TERMINAL_STATE_INDEX
 % in the ComputeTerminalStateIndex.m file (see main.m)
 
 J_init = ones(K, 1);
+J_init(TERMINAL_STATE_INDEX) = 0;
 u_ind = zeros(K, 1);
 J_old = J_init;
 J = J_init;
 del = 10;
-tol = 0.000000000001;
+tol = 1e-15;
 
 while del > tol
     for i = 1:K
+        if i == TERMINAL_STATE_INDEX
+            continue
+        end
         pos_Js = zeros(5,1);
         for u = 1:5
             pos_Js(u) = G(i,u) + P(i,:,u)*J_old;
         end
         [J(i),u_ind(i)] = min(pos_Js);
     end
-    del = norm(J - J_old);
+    del = abs(norm(J - J_old));
     J_old = J;
 end
 

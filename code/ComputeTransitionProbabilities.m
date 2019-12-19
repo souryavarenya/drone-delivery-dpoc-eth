@@ -39,11 +39,11 @@ DX = containers.Map({NORTH, SOUTH, EAST, WEST, HOVER}, {0, 0, 1, -1, 0});
 DY = containers.Map({NORTH, SOUTH, EAST, WEST, HOVER}, {1, -1, 0, 0, 0});
 
 %  Compute Base State Index
-[~,baseIndex] = ismember([1+floor(find(map' == BASE)/size(map,2)), 1+floor(find(map == BASE)/size(map,1)), 0],stateSpace,'rows');
+[~,baseIndex] = ismember([1+floor((find(map' == BASE)-1)/size(map,2)), 1+floor((find(map == BASE)-1)/size(map,1)), 0],stateSpace,'rows');
 
 %  Compute Pick-up State Indices
-[~,bef_pickup_index] = ismember([1+floor(find(map' == PICK_UP)/size(map,2)), 1+floor(find(map == PICK_UP)/size(map,1)), 0],stateSpace,'rows');
-[~,aft_pickup_index] = ismember([1+floor(find(map' == PICK_UP)/size(map,2)), 1+floor(find(map == PICK_UP)/size(map,1)), 1],stateSpace,'rows');
+[~,bef_pickup_index] = ismember([1+floor((find(map' == PICK_UP)-1)/size(map,2)), 1+floor((find(map == PICK_UP)-1)/size(map,1)), 0],stateSpace,'rows');
+[~,aft_pickup_index] = ismember([1+floor((find(map' == PICK_UP)-1)/size(map,2)), 1+floor((find(map == PICK_UP)-1)/size(map,1)), 1],stateSpace,'rows');
 
 %  Locating and counting the shooters
 [x_shooters, y_shooters] = ind2sub(size(map),find(map == SHOOTER));
@@ -83,8 +83,8 @@ for i = 1:K
         
         % Finds stateSpace index of mn_next & Assign P value to the respective location in P_temp
         [~,j] = ismember([m_next, n_next, stateSpace(i,3)],stateSpace,'rows');
-        if j == 273
-            j = 274;
+        if j == bef_pickup_index
+            j = aft_pickup_index;
         end
         P_temp(i,j,u) = P_temp(i,j,u) + (1 - P_WIND)*p_not_shot;
         
@@ -116,8 +116,8 @@ for i = 1:K
             
             % Finds stateSpace index of mn_wind & Assign P value to the respective location in P_temp
             [~,j] = ismember([m_wind n_wind stateSpace(i,3)],stateSpace,'rows');
-            if j == 273
-                j = 274;
+            if j == bef_pickup_index
+                j = aft_pickup_index;
             end
             P_temp(i,j,u) = P_temp(i,j,u) + (P_WIND/4)*p_not_shot;
             
