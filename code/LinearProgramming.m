@@ -39,6 +39,39 @@ global TERMINAL_STATE_INDEX
 % IMPORTANT: You can use the global variable TERMINAL_STATE_INDEX computed
 % in the ComputeTerminalStateIndex.m file (see main.m)
 
-
+L = size(G,2); % number of control inputs
+P_ = zeros(K*L,K);
+G_ = zeros(K*L,1);
+    
+for i = 1:L
+    P_((K*(i-1)+1):K*i,:) = P(:,:,i);
+    P_((K*(i-1)+1):K*i,:) = eye(K,K) - 0.999*P_((K*(i-1)+1):K*i,:);
+    G_((K*(i-1)+1):K*i,1) = G(:,i);
 end
 
+G_(G_==Inf) = 1e10;
+
+% solve
+f = -ones(K,1);
+J = linprog(f,P_,G_);
+
+% find optimal inputs
+u_opt = zeros(K,1);
+P(TERMINAL_STATE_INDEX,:,:) = 1;
+P(:,TERMINAL_STATE_INDEX,:) = 1;
+G(TERMINAL_STATE_INDEX,:) = 0;
+for i = 1:K
+    argmin = 100;
+    for u = 1:L
+        if argmin > G(i,u) + P(i,:,u)*J 
+            u_opt(i) = u;
+            argmin = G(i,u) + P(i,:,u)*J;
+        end
+    end
+end
+u_opt(TERMINAL_STATE_INDEX) = 1;
+
+J_opt = J;
+u_opt_ind = u_opt;
+
+end
