@@ -36,8 +36,8 @@ function G = ComputeStageCosts( stateSpace, map )
     
     % Those are the 2 maps with the probs respectively for the shot and for
     % the wind
-    map_of_shot = probShot(map)
-    map_of_wind = probWind(map, map_of_shot)
+    map_of_shot = probShot(map);
+    map_of_wind = probWind(map, map_of_shot);
     
    
     
@@ -145,7 +145,7 @@ global TREE P_WIND
                if ~(i(1)>=1 && i(1)<=M && i(2)>=1 && i(2)<=N) || map(i(1),i(2)) == TREE
                    map_of_wind(m,n) = map_of_wind(m,n) + P_WIND/4;
                else
-                   map_of_wind(m,n) = map_of_wind(m,n) + P_WIND/4*shotMap(i(1),i(2));
+                   map_of_wind(m,n) = map_of_wind(m,n) + P_WIND/4*map_of_shot(i(1),i(2));
                end
             end
         end

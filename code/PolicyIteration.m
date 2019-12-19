@@ -37,6 +37,10 @@ global K HOVER
 % iteration?
 global TERMINAL_STATE_INDEX
 % IMPORTANT: You can use the global variable TERMINAL_STATE_INDEX computed
-% in the ComputeTerminalStateIndex.m file (see main.m)
+% in the ComputeTerminalStateIndex.m file (see main.m
+
+% Prepare Proper Policy
+
+% Init seed u and J
 
 end

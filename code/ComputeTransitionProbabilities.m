@@ -41,6 +41,10 @@ DY = containers.Map({NORTH, SOUTH, EAST, WEST, HOVER}, {1, -1, 0, 0, 0});
 %  Compute Base State Index
 [~,baseIndex] = ismember([1+floor(find(map' == BASE)/size(map,2)), 1+floor(find(map == BASE)/size(map,1)), 0],stateSpace,'rows');
 
+%  Compute Pick-up State Indices
+[~,bef_pickup_index] = ismember([1+floor(find(map' == PICK_UP)/size(map,2)), 1+floor(find(map == PICK_UP)/size(map,1)), 0],stateSpace,'rows');
+[~,aft_pickup_index] = ismember([1+floor(find(map' == PICK_UP)/size(map,2)), 1+floor(find(map == PICK_UP)/size(map,1)), 1],stateSpace,'rows');
+
 %  Locating and counting the shooters
 [x_shooters, y_shooters] = ind2sub(size(map),find(map == SHOOTER));
 num_shooters = length(x_shooters);
@@ -57,6 +61,9 @@ for i = 1:K
         % Immediate Next State on action u
         m_next = m + DX(u);
         n_next = n + DY(u);
+        
+        % Initialize p_back2base with 0
+        p_back2base = 0;
         
         % Checks if action allowable - if not, skips this action
         if (m_next)*(n_next)*(m_next - M - 1)*(n_next - N - 1) == 0
@@ -76,10 +83,13 @@ for i = 1:K
         
         % Finds stateSpace index of mn_next & Assign P value to the respective location in P_temp
         [~,j] = ismember([m_next, n_next, stateSpace(i,3)],stateSpace,'rows');
-        P_temp(i,j,u) = (1 - P_WIND)*p_not_shot;
+        if j == 273
+            j = 274;
+        end
+        P_temp(i,j,u) = P_temp(i,j,u) + (1 - P_WIND)*p_not_shot;
         
         % Initialize base state counter
-        p_back2base = (1 - P_WIND)*(1 - p_not_shot);
+        p_back2base = p_back2base + (1 - P_WIND)*(1 - p_not_shot);
         
         % Run similar checks for neighboring cells
         for wind = 1:4
@@ -106,31 +116,26 @@ for i = 1:K
             
             % Finds stateSpace index of mn_wind & Assign P value to the respective location in P_temp
             [~,j] = ismember([m_wind n_wind stateSpace(i,3)],stateSpace,'rows');
-            P_temp(i,j,u) = (P_WIND/4)*p_not_shot;
+            if j == 273
+                j = 274;
+            end
+            P_temp(i,j,u) = P_temp(i,j,u) + (P_WIND/4)*p_not_shot;
             
             % Add remaining probability of getting shot to back2base
             p_back2base = p_back2base + (P_WIND/4)*(1 - p_not_shot);
             
         end
         
-        P_temp(i,baseIndex,u) = p_back2base;
+        P_temp(i,baseIndex,u) = P_temp(i,baseIndex,u) + p_back2base;
 
     end
-end
-
-%  Compute Pick-up State Indices
-[~,bef_pickup_index] = ismember([1+floor(find(map' == PICK_UP)/size(map,2)), 1+floor(find(map == PICK_UP)/size(map,1)), 0],stateSpace,'rows');
-[~,aft_pickup_index] = ismember([1+floor(find(map' == PICK_UP)/size(map,2)), 1+floor(find(map == PICK_UP)/size(map,1)), 1],stateSpace,'rows');
-
-%  Connecting pickup state from phi 0 to phi 1
-for u = 1:5
-    P_temp(bef_pickup_index, aft_pickup_index, u) = 1;
 end
 
 %  Terminal State Condition
 for j = 1:K
     for u = 1:5
         P_temp(TERMINAL_STATE_INDEX,j,u) = 0;
+        P_temp(TERMINAL_STATE_INDEX,TERMINAL_STATE_INDEX,u) = 1;
     end
 end
 
