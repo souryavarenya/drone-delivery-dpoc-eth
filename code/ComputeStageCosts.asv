@@ -76,6 +76,7 @@ function G = ComputeStageCosts(stateSpace, map )
     % The calculation done for the mapping is phi+[(m-1)*N+n]*2
     
     get_indexing = @(row, column, phi)((row-1)*N+column)*2+phi -1; % subtract 1 because of Matlab indexing
+    get_indexing = @(row, column, phi) ismember([row, column, phi],stateSpace,'rows');
     
     from_state_to_idx = index_from_map(map);
     

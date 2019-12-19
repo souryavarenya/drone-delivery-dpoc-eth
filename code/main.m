@@ -70,7 +70,7 @@ if generateRandomWorld
 	[map] = GenerateWorld(mapSize(1), mapSize(2));
 else
     % We can load a pre-generated map.
-    load('exampleWorld.mat');
+    load('World1.mat');
 end
 MakePlots(map);
 
@@ -95,9 +95,9 @@ K=size(stateSpace,1);
 %% Set the following to true as you progress with the files
 transitionProbabilitiesImplemented = true;
 stageCostsImplemented = true;
-valueIterationImplemented = false; 
-policyIterationImplemented = false;
-linearProgrammingImplemented = false;
+valueIterationImplemented = true; 
+policyIterationImplemented = true;
+linearProgrammingImplemented = true;
 
 %% Compute the terminal state index
 global TERMINAL_STATE_INDEX
@@ -127,7 +127,8 @@ if stageCostsImplemented
     % represents the cost if we are in state i and apply control input l.
     
     % TODO: Question c)
-    G = ComputeStageCosts(stateSpace, map);
+    %G = ComputeStageCosts(stateSpace, map);
+    G = ComputeStageCost(stateSpace, map);
 end
 
 %% Solve stochastic shortest path problem

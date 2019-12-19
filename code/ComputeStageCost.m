@@ -1,4 +1,4 @@
-function G = ComputeStageCosts(stateSpace, map )
+function G = ComputeStageCost(stateSpace, map )
 %COMPUTESTAGECOSTS Compute stage costs.
 % 	Compute the stage costs for all states in the state space for all
 %   control inputs.
@@ -75,7 +75,8 @@ function G = ComputeStageCosts(stateSpace, map )
     % [m,n,phi] in stateSpace to the index of the vector
     % The calculation done for the mapping is phi+[(m-1)*N+n]*2
     
-    get_indexing = @(row, column, phi)((row-1)*N+column)*2+phi -1; % subtract 1 because of Matlab indexing
+    %get_indexing = @(row, column, phi)((row-1)*N+column)*2+phi -1; % subtract 1 because of Matlab indexing
+    get_indexing = @(row, column, phi) ismember([row, column, phi],stateSpace,'rows');
     
     from_state_to_idx = index_from_map(map);
     
@@ -89,7 +90,7 @@ function G = ComputeStageCosts(stateSpace, map )
             %I convert the possible input N,S,E,O in a vector
             dir = translations(direction,:);
             if m_j+dir(1)>=1 && m_j+dir(1)<=M && n_j+dir(2)>=1 && n_j+dir(2)<=N && map(m_j+dir(1),n_j+dir(2)) ~= TREE
-                idx = get_indexing(m_j+dir(1), n_j+dir(2) ,phi_j);
+                [~,idx] = get_indexing(m_j+dir(1), n_j+dir(2) ,phi_j);
                 index_contained_in_StateSpace = from_state_to_idx( idx );
                 G(j, direction) = G(index_contained_in_StateSpace, HOVER);
             else

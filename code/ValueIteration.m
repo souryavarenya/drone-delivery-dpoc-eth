@@ -43,7 +43,7 @@ u_ind = zeros(K, 1);
 J_old = J_init;
 J = J_init;
 del = 10;
-tol = 0.001;
+tol = 0.000000000001;
 
 while del > tol
     for i = 1:K
