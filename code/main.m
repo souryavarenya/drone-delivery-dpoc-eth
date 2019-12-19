@@ -127,8 +127,7 @@ if stageCostsImplemented
     % represents the cost if we are in state i and apply control input l.
     
     % TODO: Question c)
-    %G = ComputeStageCosts(stateSpace, map);
-    G = ComputeStageCost(stateSpace, map);
+    G = ComputeStageCosts(stateSpace, map);
 end
 
 %% Solve stochastic shortest path problem
